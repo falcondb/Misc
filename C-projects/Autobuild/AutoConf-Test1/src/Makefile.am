@@ -4,5 +4,5 @@ LDFLAGS =
 
 # this lists the binaries to produce, the (non-PHONY, binary) targets in
 # the previous manual Makefile
-bin_PROGRAMS = targetbinary1 
-targetbinary1_SOURCES = helloWorld.c
+bin_PROGRAMS = helloWorld 
+helloWorld = helloWorld.c

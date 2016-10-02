@@ -4,7 +4,6 @@
 AC_PREREQ([2.69])
 AC_INIT([Falcon-autoconf-test1], [0.0.1], [abc@gmail.com])
 AM_INIT_AUTOMAKE(Falcon-autoconf-test1, 0.0.1)
-AC_OUTPUT(Makefile src/Makefile doc/Makefile scripts/Makefile)
 
 AC_CONFIG_SRCDIR([src/helloWorld.c])
 AC_CONFIG_HEADERS([config.h])
@@ -21,4 +20,4 @@ AC_PROG_INSTALL
 
 # Checks for library functions.
 
-AC_OUTPUT
+AC_OUTPUT(Makefile src/Makefile doc/Makefile scripts/Makefile)
