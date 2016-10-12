@@ -12,7 +12,7 @@ struct UDFParaEncodeMap{
 extern struct UDFParaEncodeMap udfParaEncodeMap = {
         // The values must be 4-bytes shorter than their keys
         // Because we will do inplace encoding, and 3 bytes for signature
-        .mapKey = { "com/teradata/fnc" },
+        .mapKey = { "io/falcon" },
         // Teradata fnc package delimited by slash.
         .mapValue = { "TFPS" },
         .size = 1
@@ -109,7 +109,7 @@ unsigned int deCodeUDFParameterSignature(char * toBedeCoded, size_t maxLen,
 int main(void)
 {
 
-    char input[64] = "com/teradata/fnc/data/st_geometry.java";
+    char input[64] = "io/falcon/fnc/data/st_geometry.java";
     unsigned int nl = 0;
     printf("Start....\n");
     printf("%s,%u\n", input, strlen(input));
