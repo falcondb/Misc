@@ -4,6 +4,8 @@
 
 #define DATASIZE 1024
 
+static int compInt(const void *m1, const void *m2);
+
 int main(int argc, char** argv){
 
 	int arrInt[DATASIZE];
@@ -17,7 +19,7 @@ int main(int argc, char** argv){
 		return rval;
 
 	/* create an int array for search */
-	for (i = 0 ; i< DATASIZE; arrInt[i++] = i);
+	for (i = 0 ; i< DATASIZE; arrInt[i++] = random()%DATASIZE);
 
 	/* create an int-int hashtable for search */
 	arrChar = talloc_array(NULL, char*, DATASIZE);
@@ -31,6 +33,21 @@ int main(int argc, char** argv){
 	    	goto cleanupAll;
 	}
 
+	/* search for an int in the array */
+	qsort(arrInt, DATASIZE, sizeof(int), &compInt);
+
+	for( i = 0; i < 10; i++){
+	int * res;
+	int key = random()%DATASIZE;
+    res = bsearch(&key, arrInt, DATASIZE,
+                  sizeof(int), &compInt);
+#ifdef DEBUG
+    if (res == NULL)
+        printf("%d: unknown\n", key);
+    else
+        printf("%d: in the array\n", key);
+#endif
+	}
 	/* search for random int in the hashtable */
 	for (i = 0; i < 10; i++){
 		e.key = arrChar[random()%DATASIZE];
@@ -61,4 +78,9 @@ cleanupAll:
 	talloc_free(arrChar);
 	hdestroy();
 	return rval;
+}
+
+static int compInt(const void *d1, const void *d2)
+{
+	return *(int*) d1 - *(int*)d2;
 }
