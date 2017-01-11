@@ -71,7 +71,6 @@ int main(int argc, char** argv){
 		else
 			printf("%s is not found\n", e.key);
 #endif
-		free(e.key);
 	}
 /* Clean up */
 cleanupAll:
