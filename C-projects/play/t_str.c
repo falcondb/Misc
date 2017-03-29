@@ -31,7 +31,7 @@ static unsigned int lengthOfLongestSubstring(const char * s){
 	return rst;
 }
 
-static unsigned int minDistanceWithRecurse(const char * w1, const char * w2,
+static unsigned int minDistanceWithRecurse(const char * const w1, const char * const w2,
 		unsigned int wi1, unsigned int wi2) {
 	unsigned int dis = 0;
 	unsigned int i1, i2, i3;
@@ -115,25 +115,31 @@ static unsigned int  longestValidParentheses(const char * s) {
 	return rst;
 }
 
-void main() {
+static void testlengthOfLongestSubstring(){
 	const char s[] = "badcdefcgdv";
-
 	printf("%4u\n", lengthOfLongestSubstring(s));
 }
+static void testlongestValidParentheses(){
 
-//void main(){
-//
-//	printf("%d", longestValidParentheses(")(())("));
-//}
-//void main(){
-//	const char * strs[] = { "abcd", "abcde", "abcde", "a" };
-//
-//	longestCommonPrefix(strs, sizeof(strs)/sizeof(char *));
-//}
+	printf("%d", longestValidParentheses(")(())("));
+}
+static void testlongestCommonPrefix(){
+	const char * strs[] = { "abcd", "abcde", "abcde", "a" };
 
-//void main() {
-//	const char s1[] = "x";
-//	const char s2[] = "badcd";
-//
-//	printf("%4u\n", minDistanceWithRecurse(s1, s2, 0, 0));
-//}
+	longestCommonPrefix(strs, sizeof(strs)/sizeof(char *));
+}
+
+static void testminDistanceWithRecurse() {
+	const char s1[] = "x";
+	const char s2[] = "badcd";
+
+	printf("%4u\n", minDistanceWithRecurse(s1, s2, 0, 0));
+}
+
+void main() {
+
+	testlengthOfLongestSubstring();
+	testlongestValidParentheses();
+	testlongestCommonPrefix();
+	testminDistanceWithRecurse();
+}
