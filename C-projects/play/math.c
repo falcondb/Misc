@@ -39,7 +39,7 @@ static float fclib_pow(float x, int32_t n){
 		return x;
 
 	float f = fclib_pow(x, n/2);
-	return n%2 == 0 ? f * f: n > 0 ? f * f * x: f * f * 1/x;
+	return n&0x01 == 0 ? f * f: n > 0 ? f * f * x: f * f * 1/x;
 }
 
 
@@ -178,36 +178,132 @@ static void testsumIntervalsList(){
 	}
 }
 
-static float pow(float x, uint32_t n){
-	if(x == 0)
-		return 0;
-	if(x == 1)
-		return 1;
-	if(n == 0)
-		return 1;
-	if(n == 1)
-		return x;
 
-	int f = pow(x, n/2);
-	return n/2 == 0 ? f * f: n > 0 ? f * f * x: f * f * 1/x;
+static int32_t findSingleInSortedArray(const int32_t * const arr, size_t size){
+
+	if(!arr || size % 2 == 0)
+		return 0xffffffff;
+	if(size == 1)
+		return *arr;
+
+	uint8_t st = 0, end = size, mid;
+
+	while(st <= end){
+		mid = st>>1 + end>>1;
+		if(mid > 0 && mid < size -1 ){
+			if(arr[mid - 1] != arr[mid] && arr[mid] != arr[mid+1])
+				return arr[mid];
+			else {
+				if(arr[mid - 1] == arr[mid]){
+					if((mid - st) & 0x01 == 0)
+						end = mid - 2;
+					else
+						st = mid + 1;
+			}
+				else{
+					if((mid - st) & 0x01 == 0)
+						st = mid + 2;
+					else
+						end = mid - 1;
+				}
+			}
+		}
+		else {
+			if(mid == 0 && arr[0] != arr[1])
+				return *arr;
+			else if(mid == size -1 && arr[mid - 1] != arr[mid])
+				return arr[mid];
+			else
+				return 0xffffffff;
+		}
+	}
+
+	return 0xffffffff;
 }
 
+static void testfindSingleInSortedArray(){
+	int32_t d1[] = {1};
+	int32_t d2[] = {1, 1, 2};
+	int32_t d3[] = {1, 2, 2};
+	int32_t d4[] = {1, 1, 2, 3, 3};
+	int32_t d5[] = {1, 1, 2, 2, 3};
+	int32_t d6[] = {1, 1, 2, 2, 3, 4, 4};
 
-static void testpow(){
+	assert(findSingleInSortedArray(d1, sizeof(d1)/sizeof(int32_t)) == 1);
+	assert(findSingleInSortedArray(d2, sizeof(d2)/sizeof(int32_t)) == 2);
+	assert(findSingleInSortedArray(d3, sizeof(d3)/sizeof(int32_t)) == 1);
+	assert(findSingleInSortedArray(d4, sizeof(d4)/sizeof(int32_t)) == 2);
+	assert(findSingleInSortedArray(d5, sizeof(d5)/sizeof(int32_t)) == 3);
+	assert(findSingleInSortedArray(d6, sizeof(d6)/sizeof(int32_t)) == 3);
 
-	assert(pow(1, 3) == 1);
-	assert(pow(0, 3) == 0);
-
-	assert(pow(2, 3) == 8);
-	assert(pow(-2, 3) == -8);
-	assert(pow(-2, 4) == 16);
-
-	assert(pow(0.5, 3) -  0.125 < 0.00001);
-	assert(pow(0.5, -3) == 8);
 }
+
+static void getProduction(const int16_t * data,  int32_t * res, size_t sz){
+	if(! data && res)
+		return;
+	int32_t tmp = 1;
+	size_t i;
+
+	res[0] = data[0];
+	for(i=1; i< sz - 1; res[i] = res[i-1] * data[i],  ++i);
+
+	for(i=sz-1; i>0; res[i] = res[i-1] * tmp, tmp *= data[i], --i);
+	res[0] = tmp;
+}
+
+static void testgetProduction(){
+	int16_t d1[] = {2, 8, 3};
+	int16_t d2[] = {3, 5, 2, 2, 3, 4, 4};
+
+	int32_t r1[3], r2[7];
+	int32_t e1[] = {24, 6, 16};
+	int32_t e2[] = {960, 576, 1440, 1440, 960, 720, 720};
+
+	getProduction(d1, r1, 3);
+	getProduction(d2, r2, 7);
+	assert(!memcmp(r1, e1, sizeof(r1)/sizeof(int32_t)));
+	assert(!memcmp(r2, e2, sizeof(r2)/sizeof(int32_t)));
+}
+
+//static uint8_t findMissingNumber(const char * nums, size_t nsize, uint8_t n){
+//	if(!nums)
+//		return 0xff;
+//	char flags[n];
+//	memset(flags, 0, n);
+//
+//	uint8_t i;
+//
+//}
+//static uint8_t findMissingNumberHelper(const char * nums, size_t nsize, uint8_t n, size_t ist, char * flags){
+//	if(ist == nsize - 1)
+//		return findMissingFlag(flags, n);
+//	else{
+//		flags[nums]
+//		if(findMissingNumberHelper(nums, nsize, n, ist+1, flags) )
+//	}
+//}
+//
+//static uint8_t findMissingFlag(const char * const flags, size_t s){
+//	char found = 0;
+//	uint8_t value = 0xff;
+//	size_t i = 0;
+//	for(; i<s; ++i){
+//		if(!flags[i]){
+//			if(found){
+//				found = !found;
+//				value = i;
+//			}
+//			else
+//				return 0xff;
+//		}
+//	}
+//	return 0xff;
+//}
 
 void main(){
-	testsumIntervalsList();
+	testgetProduction();
+	//testfindSingleInSortedArray();
+	//testsumIntervalsList();
 	//testsumIntervals();
 	//testsmallestDifInArrays();
 	//testpow();
